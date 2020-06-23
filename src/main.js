@@ -2,7 +2,20 @@ import Vue from "vue";
 import App from "./App.vue";
 import router from "./router";
 import store from "./store";
+import VueLodash from 'vue-lodash'
+import lodash from 'lodash'
 
+import 'bootstrap-css-only/css/bootstrap.min.css'
+import 'mdbvue/lib/css/mdb.min.css'
+import '@fortawesome/fontawesome-free/css/all.min.css'
+import "./assets/css/site.scss";
+
+import * as mdbvue from 'mdbvue'
+for (const component in mdbvue) {
+  Vue.component(component, mdbvue[component])
+}
+
+Vue.use(VueLodash, {lodash: lodash })
 Vue.config.productionTip = false;
 
 new Vue({

@@ -1,32 +1,34 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view />
+    <mdb-container fluid>
+      <div id="nav">
+        <Menu />
+      </div>
+      <router-view />
+      <Footer />
+  </mdb-container>
   </div>
 </template>
 
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script>
+// @ is an alias to /src
+import Menu from "@/components/menu.vue";
+import Footer from "@/components/footer.vue";
 
-#nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
+export default {
+  name: "Home",
+  components: {
+    Menu,
+    Footer
+  },
+  data() {
+    return {
+      entity: [],
     }
-  }
-}
-</style>
+  },
+  created: function () {
+    this.entity = require("./assets/faq.json").feed.entry;
+    this.$store.commit('setList', this.entity);
+},
+};
+</script>
