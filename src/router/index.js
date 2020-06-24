@@ -11,11 +11,18 @@ const routes = [
       import("../views/Home.vue")
   },
   {
-    path: "faq/:path",
+    path: "/faq",
     name: "Faq",
     props: true,
     component: () =>
       import("../views/faq.vue")
+  },
+  {
+    path: "/faq/:path",
+    name: "nodeFaq",
+    props: true,
+    component: () =>
+      import("../views/faq-node.vue")
   },
   // {
   //   path: "/contacts",

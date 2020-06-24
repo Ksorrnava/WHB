@@ -4,7 +4,9 @@
             <mdb-card-body>
               <mdb-card-title>{{faqData.gsx$morefaqtopics.$t}}</mdb-card-title>
               <mdb-card-text>{{faqData.gsx$intromaintext.$t}}</mdb-card-text>
-              <mdb-btn color="primary">{{faqData.gsx$readmore.$t}}</mdb-btn>
+              <router-link :to="{name: 'nodeFaq', params: { path: faqData.gsx$readmore.$t} }">
+                <mdb-btn color="primary">Read more</mdb-btn>
+              </router-link>
             </mdb-card-body>
           </mdb-card>
 </template>
@@ -18,11 +20,10 @@ export default {
       default:  function () {
         return {}
       }
-    }
+    },
   },
   data() {
     return {
-      //entity: this.$store.state.mainList,
     }
   },
 };
