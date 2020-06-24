@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <mdb-container fluid class="mt-5">
+    <mdb-container fluid class="mt-5 pt-5">
       <div id="nav">
         <Menu />
       </div>
