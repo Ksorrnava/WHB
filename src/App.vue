@@ -22,6 +22,18 @@ export default {
     Menu,
     Footer
   },
+  metaInfo() {
+    return {
+        title: "WoodHouseBali - Joglo Gladak or other traditional wood house styles in Bali",
+        meta: [
+            { name: 'description', content:  "To start making your own traditional house in Bali have never been easier. We have pre built Joglo and Gladak's that are made in Jawa using teak (Jati) that are ready to be shipped and put on your land."},
+            { property: 'og:title', content: "WoodHouseBali - Joglo Gladak or other traditional wood house styles in Bali"},
+            { property: 'og:site_name', content: 'WoodHouseBali'},
+            {property: 'og:type', content: 'website'},
+            {name: 'robots', content: 'index,follow'}
+        ]
+    }
+},
   data() {
     return {
       entity: [],
