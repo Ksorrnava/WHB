@@ -42,7 +42,7 @@ export default {
     },
     rewriteEntity(ent){
       let self = this;
-      let hashes = ['page', 'faq', 'extras', 'system']
+      let hashes = ['page', 'faq', 'extras', 'villa', 'system']
       let result = {};
       hashes.forEach(function (name) {
           result[name] = self.getByValue(ent, name);
