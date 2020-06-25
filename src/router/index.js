@@ -15,7 +15,7 @@ const routes = [
     name: "Faq",
     props: true,
     component: () =>
-      import("../views/faq.vue")
+      import("../views/faq-list.vue")
   },
   {
     path: "/faq/:path",
@@ -24,31 +24,20 @@ const routes = [
     component: () =>
       import("../views/faq-node.vue")
   },
-  // {
-  //   path: "/contacts",
-  //   name: "Contacts",
-  //   component: () =>
-  //     import("../views/Node.vue")
-  // },
-  // {
-  //   path: "/release/:path",
-  //   name: "Article",
-  //   props: true,
-  //   component: () => import("../views/Node.vue")
-  // },
-  // {
-  //   path: "/results",
-  //   name: "Results",
-  //   props: true,
-  //   component: () => import( "../views/Results.vue")
-  // },
-  // {
-  //   path: "/tags/:tagId",
-  //   name: "Tags",
-  //   props: true,
-  //   component: () => import( "../views/Tags.vue")
-  // }
-
+  {
+    path: "/villas",
+    name: "Villas",
+    props: true,
+    component: () =>
+      import("../views/villa-list.vue")
+  },
+  {
+    path: "/villas/:path",
+    name: "nodeVilla",
+    props: true,
+    component: () =>
+      import("../views/villa-node.vue")
+  },
 ];
 
 const router = new VueRouter({

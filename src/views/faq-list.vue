@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>{{$route.name}}</h1>
+    <h1>FAQ</h1>
     <template v-if="$route.name == 'Faq'">
     <mdb-row class="columns" v-for="(chunk, index) in faqChunks" :key="index">
       <mdb-col md="4"  class="mb-5" v-for="(item, index) in chunk" :key="index">
