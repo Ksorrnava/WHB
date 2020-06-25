@@ -1,12 +1,12 @@
 <template>
   <div id="app">
-    <mdb-container fluid class="mt-5">
+    <mdb-container class="mt-5">
       <div id="nav">
         <Menu />
       </div>
       <router-view />
-      <Footer />
   </mdb-container>
+  <Footer />
   </div>
 </template>
 
