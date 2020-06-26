@@ -45,7 +45,7 @@
 <!-- Modal -->
 <mdb-modal side position="right" fullHeight scrollable direction="right" :show="modal" @close="modal = false">
   <mdb-modal-header>
-    <mdb-modal-title>Modal title</mdb-modal-title>
+    All FAQ
   </mdb-modal-header>
   <FAQmodal />
 </mdb-modal>
@@ -136,7 +136,6 @@ export default {
   methods: {
     getPrices() {
       let price = _.find(this.$store.state.priceList, ['gsx$id.$t', this.entity.gsx$id.$t])
-      console.log(price)
       return price
     },
     resizeImageforSlider: function (val) {
@@ -158,15 +157,23 @@ export default {
     }
   },
   watch: {
-  slides: {
-    deep: true,
-    handler() {
-     this.$nextTick(() => {
-        this.asNavFor1 = [this.$refs.thumbnails];
-        this.asNavFor2 = [this.$refs.main];
-     });
+    slides: {
+      deep: true,
+      handler() {
+       this.$nextTick(() => {
+          this.asNavFor1 = [this.$refs.thumbnails];
+          this.asNavFor2 = [this.$refs.main];
+       });
+      },
     },
-  },
+    modal: function() {
+      if(this.modal){
+        document.documentElement.style.overflow = 'hidden'
+        return
+      }
+
+      document.documentElement.style.overflow = 'auto'
+    }
 },
 };
 </script>
