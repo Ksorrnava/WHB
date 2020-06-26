@@ -5,11 +5,13 @@ import store from "./store";
 import VueLodash from 'vue-lodash'
 import lodash from 'lodash'
 import VueMeta from 'vue-meta'
+import VueAgile from 'vue-agile'
+
 
 import 'bootstrap-css-only/css/bootstrap.min.css'
 import 'mdbvue/lib/css/mdb.min.css'
 import '@fortawesome/fontawesome-free/css/all.min.css'
-import "./assets/css/site.scss";
+import './assets/css/site.scss';
 
 import * as mdbvue from 'mdbvue'
 for (const component in mdbvue) {
@@ -18,6 +20,7 @@ for (const component in mdbvue) {
 
 Vue.use(VueLodash, {lodash: lodash })
 Vue.use(VueMeta)
+Vue.use(VueAgile)
 Vue.config.productionTip = false;
 
 Vue.filter('capitalize', function (string) {
@@ -25,6 +28,14 @@ Vue.filter('capitalize', function (string) {
           var noCaseTail = string.slice(1, string.length)
             return capitalFirst + noCaseTail
         })
+var filter = function(text, length, clamp){
+            clamp = clamp || '...';
+            var node = document.createElement('div');
+            node.innerHTML = text;
+            var content = node.textContent;
+            return content.length > length ? content.slice(0, length) + clamp : content;
+};
+Vue.filter('truncate', filter);
 
 new Vue({
   router,

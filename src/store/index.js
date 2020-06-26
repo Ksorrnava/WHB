@@ -4,11 +4,15 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
     state: {
-        mainList: []
+        mainList: [],
+        priceList: []
     },
     mutations: {
         setList(state, value) {
             state.mainList = value;
+        },
+        setPriceList(state, value) {
+            state.priceList = value;
         },
     },
     actions: {},

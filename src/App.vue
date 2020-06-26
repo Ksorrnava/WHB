@@ -41,7 +41,9 @@ export default {
   },
   created: function () {
     this.entity = require("./assets/faq.json").feed.entry;
+    let prices = require("./assets/villa_sizes.json").feed.entry;
     this.$store.commit('setList', this.rewriteEntity(this.entity));
+    this.$store.commit('setPriceList', prices);
 },
   methods: {
     getByValue(arr, val){
