@@ -38,6 +38,13 @@ const routes = [
     component: () =>
       import("../views/villa-node.vue")
   },
+  {
+    path: "/search/:query",
+    name: "Search",
+    props: true,
+    component: () =>
+      import("../views/search.vue")
+  },
 ];
 
 const router = new VueRouter({

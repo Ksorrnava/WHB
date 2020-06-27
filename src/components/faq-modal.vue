@@ -1,7 +1,6 @@
 <template>
     <mdb-modal-body>
         <input v-model="searchWord" class="form-control" type="text" placeholder="Search in FAQ" aria-label="Search"/>
-
       <mdb-list-group>
         <mdb-list-group-item v-for="(item, index) in filteredFAQ" :key="index" :action="true" v-on:click.native="reroute(item.gsx$readmore.$t)">
           <div>
