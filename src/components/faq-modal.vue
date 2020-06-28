@@ -33,7 +33,7 @@ export default {
     	 var self = this;
        return this.entity.filter(o => {
          return Object.keys(o).some(k => {
-           if(o[k].$t && typeof o[k].$t === 'string') return o[k].$t.toLowerCase().includes(self.searchWord.toLowerCase());
+           if(o[k] != 'undefined' && o[k].$t && typeof o[k].$t === 'string') return o[k].$t.toLowerCase().includes(self.searchWord.toLowerCase());
          });
        });
     }

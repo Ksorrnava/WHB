@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <mdb-container class="mt-5">
+    <mdb-container class="mt-5 pt-5">
       <div id="nav">
         <Menu />
       </div>
@@ -20,7 +20,7 @@ export default {
   name: "Home",
   components: {
     Menu,
-    Footer
+    Footer,
   },
   metaInfo() {
     return {

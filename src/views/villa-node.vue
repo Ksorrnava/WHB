@@ -15,10 +15,10 @@
        </agile>
      </mdb-col>
      <mdb-col col="6">
-       <mdb-card>
-         <mdb-card-header color="primary-color" tag="h3">Basic price for this villa: {{prices.gsx$villa.$t}}</mdb-card-header>
+       <mdb-card v-if="prices">
+         <mdb-card-header color="primary-color" tag="h3" v-if="prices.gsx$villa != 'undefined'">Basic price for this villa: {{prices.gsx$villa.$t}}</mdb-card-header>
          <mdb-card-body>
-           <mdb-btn color="primary">go somewhere</mdb-btn>
+           <mdb-btn color="primary" @click="scrollTo()">go somewhere</mdb-btn>
          </mdb-card-body>
        </mdb-card>
        <template v-for="(item, index) in entity" >
@@ -30,8 +30,29 @@
      </mdb-col>
     </mdb-row>
 <mdb-row>
-  <mdb-col col="12">
-    Here will be choices and whatever elso going to be here
+  <mdb-col col="12" id="options" class="options mt-5 mb-5">
+    <h2>Design  your own joglo and get a price </h2>
+    <div class="icon-buttons text-center row">
+      <mdb-col>
+      <mdb-btn outline="info" @click.native="openOptions('tab-1')" darkWaves class="btn--options"><img  class="button-img" src="./../assets/logo.svg" /></mdb-btn>
+      </mdb-col>
+      <mdb-col >
+      <mdb-btn outline="info" @click.native="openOptions('tab-2')" darkWaves class="btn--options"><img  class="button-img" src="./../assets/logo.svg" /></mdb-btn>
+      </mdb-col>
+      <mdb-col >
+      <mdb-btn outline="info" @click.native="openOptions('tab-3')" darkWaves class="btn--options"><img  class="button-img" src="./../assets/logo.svg" /></mdb-btn>
+      </mdb-col>
+      <mdb-col >
+      <mdb-btn outline="info" @click.native="openOptions('tab-4')" darkWaves class="btn--options"><img  class="button-img" src="./../assets/logo.svg" /></mdb-btn>
+      </mdb-col>
+      <mdb-col >
+      <mdb-btn outline="info" @click.native="openOptions('tab-5')" darkWaves class="btn--options"><img  class="button-img" src="./../assets/logo.svg" /></mdb-btn>
+      </mdb-col>
+      <mdb-col >
+      <mdb-btn outline="info" @click.native="openOptions('tab-6')" darkWaves class="btn--options"><img  class="button-img" src="./../assets/logo.svg" /></mdb-btn>
+      </mdb-col>
+    </div>
+    <mdb-btn color="primary"  size="lg"  @click.native="modalOptions = true">Choose your options</mdb-btn>
   </mdb-col>
 </mdb-row>
 
@@ -48,6 +69,32 @@
     All FAQ
   </mdb-modal-header>
   <FAQmodal />
+</mdb-modal>
+
+<mdb-modal position="bottom" fullHeight direction="bottom" :show="modalOptions" @close="modalOptions = false">
+        <mdb-modal-header>
+            <mdb-modal-title>Your {{priceType}} price is {{price}}</mdb-modal-title>
+        </mdb-modal-header>
+        <mdb-modal-body>
+          <div class="icon-buttons text-center">
+            <mdb-btn outline="info" size="lg" :active="this.chosenTab == 'tab-1'" @click.native="modalTabHandler('tab-1')" darkWaves><img  class="button-img" src="./../assets/logo.svg" /></mdb-btn>
+            <mdb-btn outline="info" size="lg" :active="this.chosenTab == 'tab-2'" @click.native="modalTabHandler('tab-2')" darkWaves><img  class="button-img" src="./../assets/logo.svg" /></mdb-btn>
+            <mdb-btn outline="info" size="lg" :active="this.chosenTab == 'tab-3'" @click.native="modalTabHandler('tab-3')" darkWaves><img  class="button-img" src="./../assets/logo.svg" /></mdb-btn>
+            <mdb-btn outline="info" size="lg" :active="this.chosenTab == 'tab-4'" @click.native="modalTabHandler('tab-4')" darkWaves><img  class="button-img" src="./../assets/logo.svg" /></mdb-btn>
+            <mdb-btn outline="info" size="lg" :active="this.chosenTab == 'tab-5'" @click.native="modalTabHandler('tab-5')" darkWaves><img  class="button-img" src="./../assets/logo.svg" /></mdb-btn>
+            <mdb-btn outline="info" size="lg" :active="this.chosenTab == 'tab-6'" @click.native="modalTabHandler('tab-6')" darkWaves><img  class="button-img" src="./../assets/logo.svg" /></mdb-btn>
+          </div>
+          <div class="tab-content">
+            Here will be options for {{chosenTab}}
+          </div>
+        </mdb-modal-body>
+
+        <mdb-modal-footer class="d-flex justify-content-between">
+          <mdb-btn outline="info" @click.native="changeModalTab('prev')" ><mdb-icon icon="angle-double-left"/></mdb-btn>
+            <mdb-btn color="secondary" @click.native="modalOptions = false">Close</mdb-btn>
+            <mdb-btn color="primary">Save changes</mdb-btn>
+            <mdb-btn outline="info" @click.native="changeModalTab('next')"><mdb-icon icon="angle-double-right"/></mdb-btn>
+        </mdb-modal-footer>
 </mdb-modal>
 
 
@@ -77,6 +124,10 @@ export default {
   data() {
     return {
       modal: false,
+      modalOptions: false,
+      priceType: 'basic',
+      chosenTab: '',
+      price: '',
       prices: {},
       entity: this.getData(this.path),
       slides: [],
@@ -132,6 +183,7 @@ export default {
    mounted() {
      this.slides = this.getImagesforSlider();
      this.prices = this.getPrices()
+     this.price = this.getPrices().gsx$villa.$t;
    },
   methods: {
     getPrices() {
@@ -144,17 +196,31 @@ export default {
     getImagesforSlider() {
       let self = this;
       let result = _.without(_.map(this.entity, function(value, key) {
-        if(!key.includes('image') || value.$t == '') return
+        if(!key.includes('image') || value == 'undefined' || value.$t == '') return
         return self.resizeImageforSlider(value.$t)
      }), undefined);
       return result
     },
     getData(val) {
       let result = this.$store.state.mainList.villa.filter(obj => {
-        return obj.gsx$readmore.$t === val
+        if (obj.gsx$readmore != 'undefined') return obj.gsx$readmore.$t === val
       })
       return result[0]
-    }
+    },
+    scrollTo() {
+      var el = this.$el.getElementsByClassName("options")[0];
+        el.scrollIntoView({ behavior: 'smooth' });
+    },
+    changeModalTab(direction) {
+      console.log(direction)
+    },
+    modalTabHandler(val) {
+      this.chosenTab = val;
+    },
+    openOptions(tab) {
+      this.modalOptions = true;
+      this.chosenTab = tab;
+    },
   },
   watch: {
     slides: {
