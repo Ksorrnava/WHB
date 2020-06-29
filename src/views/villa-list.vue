@@ -1,11 +1,22 @@
 <template>
   <div>
     <h1>All villas</h1>
-    <mdb-row class="columns" v-for="(chunk, index) in chunks" :key="index">
-      <mdb-col md="4"  class="mb-5" v-for="(item, index) in chunk" :key="index">
-         <item :villaData="item"/>
-      </mdb-col>
-    </mdb-row>
+
+    <template v-if="$route.name == 'Home'">
+      <mdb-row  class="columns" >
+        <mdb-col md="4"  class="mb-5" v-for="(item, index) in entity" :key="index" v-show="item.gsx$hashtags.$t.includes('homepage')">
+           <item :villaData="item"/>
+        </mdb-col>
+      </mdb-row>
+   </template>
+
+   <template v-else>
+     <mdb-row class="columns" v-for="(chunk, index) in chunks" :key="index">
+       <mdb-col md="4"  class="mb-5" v-for="(item, index) in chunk" :key="index">
+          <item :villaData="item"/>
+       </mdb-col>
+     </mdb-row>
+  </template>
 </div>
 </template>
 

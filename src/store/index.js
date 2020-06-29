@@ -5,7 +5,8 @@ Vue.use(Vuex);
 export default new Vuex.Store({
     state: {
         mainList: [],
-        priceList: []
+        priceList: [],
+        sizeList: []
     },
     mutations: {
         setList(state, value) {
@@ -13,6 +14,9 @@ export default new Vuex.Store({
         },
         setPriceList(state, value) {
             state.priceList = value;
+        },
+        setSizeList(state, value) {
+            state.sizeList = value;
         },
     },
     actions: {},

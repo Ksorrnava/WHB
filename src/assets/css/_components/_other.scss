@@ -22,11 +22,39 @@
   height: auto;
 }
 .btn--options {
-  // width: 200px;
-  // height: 200px;
   padding: 0;
+  width: 100%;
     .button-img {
       width: 100%;
     }
-
+}
+.nodeVilla {
+  .right-column {
+    padding-left: 25px;
+  }
+}
+.agile {
+  .agile__actions {
+    position: absolute;
+    z-index: 100;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+  }
+   .agile__nav-button--prev {
+    left: -30px;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  .agile__nav-button--next {
+    right: -30px;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+}
+.for-scroll {
+  scroll-margin-top: 5rem;
 }

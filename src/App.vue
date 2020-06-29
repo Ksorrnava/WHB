@@ -1,6 +1,6 @@
 <template>
-  <div id="app">
-    <mdb-container class="mt-5 pt-5">
+  <div id="app" class="mt-5 pt-5">
+    <mdb-container >
       <div id="nav">
         <Menu />
       </div>
@@ -36,30 +36,39 @@ export default {
 },
   data() {
     return {
-      entity: [],
     }
   },
   created: function () {
-    this.entity = require("./assets/faq.json").feed.entry;
     let prices = require("./assets/villa_sizes.json").feed.entry;
-    this.$store.commit('setList', this.rewriteEntity(this.entity));
+    this.$store.commit('setList', this.rewriteEntity());
     this.$store.commit('setPriceList', prices);
+    this.$store.commit('setSizeList', this.getSizes());
 },
   methods: {
+    getLinkByValue(key) {
+      return this.$store.state.mainList.villa.find(x => x.gsx$id.$t === key).gsx$readmore.$t;
+    },
+    getSizes() {
+      let res = []
+        this.$store.state.priceList.forEach(obj => {
+          res.push({text: obj.gsx$size.$t, value: this.getLinkByValue(obj.gsx$id.$t)  })
+        });
+       return res
+    },
     getByValue(arr, val){
       let result;
       result = _.filter(arr, function(o) {
         if (o.gsx$hashtags.$t.includes(val)) return o;
       });
       return result
-
     },
-    rewriteEntity(ent){
+    rewriteEntity(){
+      let entity = require("./assets/faq.json").feed.entry;
       let self = this;
       let hashes = ['page', 'faq', 'extras', 'villa', 'system']
       let result = {};
       hashes.forEach(function (name) {
-          result[name] = self.getByValue(ent, name);
+          result[name] = self.getByValue(entity, name);
       })
       return result
     },
