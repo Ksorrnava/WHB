@@ -2,8 +2,6 @@
         <mdb-card class="card-image" v-bind:style="{ 'background-image': 'url(' + resizeImage + ')' }" >
           <div class="text-white text-center d-flex align-items-center rgba-black-light py-5 px-4">
             <div>
-              <!-- <h5 class="pink-text">
-                Marketing</h5> -->
               <mdb-card-title tag="h3" class="pt-2"><strong>{{villaData.gsx$morefaqtopics.$t}}</strong></mdb-card-title>
               <p>{{villaData.gsx$intromaintext.$t}}</p>
               <router-link :to="{name: 'nodeVilla', params: { path: villaData.gsx$readmore.$t} }">

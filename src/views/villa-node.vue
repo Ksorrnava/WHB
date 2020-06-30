@@ -16,11 +16,26 @@
          <template slot="nextButton"><i class="fas fa-chevron-right"></i></template>
        </agile>
      </mdb-col>
-     <mdb-col col="6" class="villa right-column">
+     <mdb-col col="6" class="villa right-column for-scroll">
        <mdb-card v-if="prices">
-         <mdb-card-header color="primary-color" tag="h3" v-if="prices.gsx$villa != 'undefined'">Basic price for this villa: {{prices.gsx$villa.$t}}</mdb-card-header>
+         <template v-if="!calculated">
+           <mdb-card-header color="primary-color" tag="h3" v-if="priceCalc.basic != null ">Basic price for this villa:
+             {{priceCalc.basic | toCurrency }}
+           </mdb-card-header>
+          </template>
+          <template v-else>
+            <mdb-card-header color="orange darken-2" tag="h3" v-if="priceCalc.basic != null ">Custom price for this villa: {{calculatedPrice}}</mdb-card-header>
+          </template>
          <mdb-card-body>
-           <mdb-btn color="primary" @click="scrollTo()">go somewhere</mdb-btn>
+           <template v-if="!calculated">
+             <mdb-btn color="primary" @click="scrollTo('options')">Calculate custom price</mdb-btn>
+           </template>
+           <template v-else>
+             <div v-for="(item, index) in priceCalc" :key="index">
+               <span class="label">{{index}}:</span><span class="data">{{item | toCurrency}}</span>
+             </div>
+             <mdb-btn color="primary" @click="scrollTo('options')">Recalculate custom price</mdb-btn>
+           </template>
          </mdb-card-body>
        </mdb-card>
        <template v-for="(item, index) in entity" >
@@ -60,12 +75,12 @@
 <mdb-row>
   <mdb-col col="12">
     <FAQ />
-    <mdb-btn color="primary" block @click.native="modal = true">All frequently asked questions</mdb-btn>
+    <mdb-btn color="primary" block @click.native="modalFaq = true">All frequently asked questions</mdb-btn>
   </mdb-col>
 </mdb-row>
 
 <!-- Modal -->
-<mdb-modal side position="right" fullHeight scrollable direction="right" :show="modal" @close="modal = false">
+<mdb-modal side position="right" fullHeight scrollable direction="right" :show="modalFaq" @close="modalFaq = false">
   <mdb-modal-header>
     All FAQ
   </mdb-modal-header>
@@ -74,45 +89,58 @@
 
 <mdb-modal position="bottom" fullHeight direction="bottom" :show="modalOptions" @close="modalOptions = false">
         <mdb-modal-header>
-            <mdb-modal-title>Your {{priceType}} price is {{price}}</mdb-modal-title>
+            <mdb-modal-title>Your {{ifBasic}} price is {{calculatedPrice | toCurrency}}</mdb-modal-title>
         </mdb-modal-header>
         <mdb-modal-body>
           <div class="icon-buttons text-center">
-            <mdb-btn outline="info" size="lg" :active="this.chosenTab == '1'" @click.native="modalTabHandler('1')" darkWaves><img  class="button-img" src="./../assets/logo.svg" /></mdb-btn>
-            <mdb-btn outline="info" size="lg" :active="this.chosenTab == '2'" @click.native="modalTabHandler('2')" darkWaves><img  class="button-img" src="./../assets/logo.svg" /></mdb-btn>
-            <mdb-btn outline="info" size="lg" :active="this.chosenTab == '3'" @click.native="modalTabHandler('3')" darkWaves><img  class="button-img" src="./../assets/logo.svg" /></mdb-btn>
-            <mdb-btn outline="info" size="lg" :active="this.chosenTab == '4'" @click.native="modalTabHandler('4')" darkWaves><img  class="button-img" src="./../assets/logo.svg" /></mdb-btn>
-            <mdb-btn outline="info" size="lg" :active="this.chosenTab == '5'" @click.native="modalTabHandler('5')" darkWaves><img  class="button-img" src="./../assets/logo.svg" /></mdb-btn>
-            <mdb-btn outline="info" size="lg" :active="this.chosenTab == '6'" @click.native="modalTabHandler('6')" darkWaves><img  class="button-img" src="./../assets/logo.svg" /></mdb-btn>
+            <mdb-btn :outline="chosenTab == '1' ? 'success' : 'info'" size="lg" @click.native="modalTabHandler('1')" darkWaves ><img  class="button-img" src="./../assets/logo.svg" /></mdb-btn>
+            <mdb-btn :outline="chosenTab == '2' ? 'success' : 'info'"  size="lg" @click.native="modalTabHandler('2')" darkWaves ><img  class="button-img" src="./../assets/logo.svg" /></mdb-btn>
+            <mdb-btn :outline="chosenTab == '3' ? 'success' : 'info'"  size="lg" @click.native="modalTabHandler('3')" darkWaves ><img  class="button-img" src="./../assets/logo.svg" /></mdb-btn>
+            <mdb-btn :outline="chosenTab == '4' ? 'success' : 'info'"  size="lg" @click.native="modalTabHandler('4')" darkWaves ><img  class="button-img" src="./../assets/logo.svg" /></mdb-btn>
+            <mdb-btn :outline="chosenTab == '5' ? 'success' : 'info'"  size="lg" @click.native="modalTabHandler('5')" darkWaves ><img  class="button-img" src="./../assets/logo.svg" /></mdb-btn>
+            <mdb-btn :outline="chosenTab == '6' ? 'success' : 'info'"  size="lg" @click.native="modalTabHandler('6')" darkWaves ><img  class="button-img" src="./../assets/logo.svg" /></mdb-btn>
           </div>
-          <div class="tab-content">
+          <mdb-card class="card-body mt-4 ml-4 mr-4">
             <template v-if="chosenTab == '1'">
               <select class="browser-default custom-select" v-model="size" >
                 <option v-for="(option, index) in $store.state.sizeList" :value="option.value" :key="index">{{option.text}}</option>
               </select>
             </template>
             <template v-if="chosenTab == '2'">
-              Centerpiece wood
-              With or without carving
-              Head piece no wood at all (open view of roof)
-              Center pillars
-              Carving
-              Without carving
-              Concrete pillar base
-              Without pillar base
+              <div class="mt-2 mb-2">
+                <h5>Centerpiece wood</h5>
+                <mdb-input type="radio"  id="center-1" name="groupCenterPiece" radioValue="gsx$centerpiecewoodcarving" @input="changePrice($event, 'center')" label="With carving" />
+                <mdb-input type="radio" id="center-2" name="groupCenterPiece" radioValue="gsx$centerpiecenocarving" @input="changePrice($event, 'center')" label="Without carving" />
+                <mdb-input type="radio" id="center-3" name="groupCenterPiece" radioValue="gsx$centerpieceheadpiecenowoodatallopenviewofroof" @input="changePrice($event, 'center')" label="No centerpiece - open view of roof" />
+              </div>
+              <div class="mt-2 mb-2">
+                <h5>Center pillars carving</h5>
+                <mdb-input type="radio"  id="pillars-1" name="groupPillars" radioValue="gsx$centerpillarscarving" @input="changePrice($event, 'pillars')" label="With carving" />
+                <mdb-input type="radio" id="pillars-2" name="groupPillars" radioValue="gsx$centerpillarswithoutcarving" @input="changePrice($event, 'pillars')" label="Without carving" />
+              </div>
+              <div class="mt-2 mb-2">
+                <h5>Center pillars base</h5>
+                <mdb-input type="radio"  id="base-1" name="groupBase" radioValue="gsx$centerpillarsconcretepillarbase" @input="changePrice($event, 'base')" label="Concrete pillar base" />
+                <mdb-input type="radio" id="base-2" name="groupBase" radioValue="gsx$centerpillarswithoutpillarbase" @input="changePrice($event, 'base')" label="Without pillar base" />
+              </div>
             </template>
             <template v-if="chosenTab == '3'">
-              Roofs
-Ceramic tile
-Pasir Atap (don't know the english word for this)
-Inside roofs
-Nothing
-Bamboo
-Triplex
-Thick
-Thin
-Colors
-With or without foil
+              <ul>Roofs
+              <li>Inside roofs<ul>
+                <li>Nothing</li>
+              <li>Bamboo</li>
+              <li>Triplex<ul>
+              <li>Thick</li>
+              <li>Thin</li>
+              <li>Colors</li>
+            </ul>
+              <li>With or without foil</li>
+            </ul>
+            </li>
+          </ul>
+            <h5>Roof tiles</h5>
+            <mdb-input type="radio"  id="roofTile-1" name="groupRoofTile" radioValue="gsx$roofceramictile" @input="changePrice($event, 'roofTiles')" label="Ceramic roof tiles" />
+            <mdb-input type="radio" id="roofTile-2" name="groupRoofTile" radioValue="gsx$roofpasiratap" @input="changePrice($event, 'roofTiles')" label="Pasir Atap" />
 
             </template>
             <template v-if="chosenTab == '4'">
@@ -145,16 +173,16 @@ With or without foil
               Brick walls (Need to be consulted, location and what type, red brick, normal brick with plaster)
             </template>
             <template v-if="chosenTab == '6'">
-            Foundations for wood houses
-No foundation/Concrete foundation
-</template>
-          </div>
+              Foundations for wood houses
+              No foundation/Concrete foundation
+            </template>
+          </mdb-card>
         </mdb-modal-body>
 
         <mdb-modal-footer class="d-flex justify-content-between">
           <mdb-btn outline="info" @click.native="changeModalTab('prev')" v-if="chosenTab != '1'"><mdb-icon icon="angle-double-left"/></mdb-btn>
             <mdb-btn color="secondary" @click.native="modalOptions = false">Close</mdb-btn>
-            <mdb-btn color="primary">Save changes</mdb-btn>
+            <mdb-btn color="primary"  @click.native="applyPrice()">Save changes</mdb-btn>
             <mdb-btn outline="info" @click.native="changeModalTab('next')" v-if="chosenTab != '6'"><mdb-icon icon="angle-double-right"/></mdb-btn>
         </mdb-modal-footer>
 </mdb-modal>
@@ -165,6 +193,7 @@ No foundation/Concrete foundation
 </template>
 
 <script>
+import Vue from "vue";
 import _ from 'lodash'
 import Utils from './../utils'
 
@@ -186,11 +215,13 @@ export default {
   data() {
     return {
       size: '',
-      modal: false,
+      calculated: false,
+      modalFaq: false,
       modalOptions: false,
-      priceType: 'basic',
       chosenTab: '',
-      price: '',
+      priceCalc: {
+        basic: null,
+      },
       prices: {},
       entity: this.getData(this.path),
       slides: [],
@@ -242,13 +273,24 @@ export default {
            ]
        }
   },
-   computed: {
-
-   },
+  computed: {
+    ifBasic() {
+      let val = ''
+      if(this.calculatedPrice  == Number(this.getPrices().gsx$villa.$t.replace(/,/g,""))) {
+        val = 'basic'
+      } else {
+        val = 'custom'
+      }
+      return val
+    },
+    calculatedPrice() {
+      return _.sum(_.values(this.priceCalc))
+    }
+  },
    mounted() {
      this.slides = this.getImagesforSlider();
      this.prices = this.getPrices()
-     this.price = this.getPrices().gsx$villa.$t;
+     this.priceCalc.basic = Number(this.getPrices().gsx$villa.$t.replace(/,/g,""));
      this.size = this.entity.gsx$readmore.$t;
    },
   methods: {
@@ -257,7 +299,7 @@ export default {
       return price
     },
     resizeImageforSlider: function (val) {
-      return Utils.setImageSize(val,'1108', '800')
+      return Utils.setImageSize(val,'700', '350')
     },
     getImagesforSlider() {
       let self = this;
@@ -273,8 +315,8 @@ export default {
       })
       return result[0]
     },
-    scrollTo() {
-      var el = this.$el.getElementsByClassName("options")[0];
+    scrollTo(name) {
+      var el = this.$el.getElementsByClassName(name)[0];
         el.scrollIntoView({ behavior: 'smooth' });
     },
     changeModalTab(direction) {
@@ -293,6 +335,16 @@ export default {
       this.modalOptions = true;
       this.chosenTab = tab;
     },
+    changePrice(val, name) {
+      if(val) {
+        Vue.set(this.priceCalc, name, Number(this.prices[val].$t))
+      }
+    },
+    applyPrice() {
+      this.modalOptions = false;
+      this.calculated = true;
+      this.scrollTo('villa')
+    },
   },
   watch: {
     slides: {
@@ -304,8 +356,8 @@ export default {
        });
       },
     },
-    modal: function() {
-      if(this.modal){
+    'modalFaq': function() {
+      if(this.modalFaq){
         document.documentElement.style.overflow = 'hidden'
         return
       }
