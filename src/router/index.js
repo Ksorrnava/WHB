@@ -11,36 +11,41 @@ const routes = [
       import("../views/Home.vue")
   },
   {
-    path: "/faq",
+    path: "/faq/",
     name: "Faq",
     props: true,
+    pathToRegexpOptions: { strict: true } ,
     component: () =>
       import("../views/faq-list.vue")
   },
   {
-    path: "/faq/:path",
+    path: "/faq/:path/",
     name: "nodeFaq",
     props: true,
+    pathToRegexpOptions: { strict: true } ,
     component: () =>
       import("../views/faq-node.vue")
   },
   {
-    path: "/villas",
+    path: "/villas/",
     name: "Villas",
     props: true,
+    pathToRegexpOptions: { strict: true } ,
     component: () =>
       import("../views/villa-list.vue")
   },
   {
-    path: "/villas/:path",
+    path: "/villas/:path/",
     name: "nodeVilla",
+    pathToRegexpOptions: { strict: true } ,
     props: true,
     component: () =>
       import("../views/villa-node.vue")
   },
   {
-    path: "/search/:query",
+    path: "/search",
     name: "Search",
+    pathToRegexpOptions: { strict: true } ,
     props: true,
     component: () =>
       import("../views/search.vue")

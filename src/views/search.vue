@@ -21,7 +21,7 @@ import _ from 'lodash'
 export default {
   name: "search",
   props: {
-    query: {
+    searchWord: {
       type: String,
       default: ''
     },
@@ -32,8 +32,8 @@ export default {
     }
   },
   created() {
-    if (this.query != '') {
-      this.entity = this.getData(this.query)
+    if (this.searchWord != '') {
+      this.entity = this.getData(this.searchWord)
     }
   },
   methods: {
@@ -52,7 +52,7 @@ export default {
     }
   },
   watch: {
-  'query': function (newValue) {
+  'searchWord': function (newValue) {
       this.entity = this.getData(newValue)
   },
 }

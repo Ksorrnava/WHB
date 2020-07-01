@@ -54,7 +54,7 @@ export default {
   },
   methods: {
     rerouteSearch() {
-    this.$router.push({ name: 'Search', params: { query: this.searchWord} });
+    this.$router.push({ name: 'Search', query: { key: this.searchWord}, params: {searchWord: this.searchWord} });
     }
   }
 };
